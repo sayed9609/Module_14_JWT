@@ -8,23 +8,23 @@
                     <div class="container-fluid m-0 p-0">
                         <div class="row m-0 p-0">
                             <div class="col-md-4 p-2">
-                                <label>Email Address</label>
+                                <label for="email">Email Address</label>
                                 <input readonly id="email" placeholder="User Email" class="form-control" type="email"/>
                             </div>
                             <div class="col-md-4 p-2">
-                                <label>First Name</label>
+                                <label for="firstName">First Name</label>
                                 <input id="firstName" placeholder="First Name" class="form-control" type="text"/>
                             </div>
                             <div class="col-md-4 p-2">
-                                <label>Last Name</label>
+                                <label for="lastName">Last Name</label>
                                 <input id="lastName" placeholder="Last Name" class="form-control" type="text"/>
                             </div>
                             <div class="col-md-4 p-2">
-                                <label>Mobile Number</label>
-                                <input id="mobile" placeholder="Mobile" class="form-control" type="mobile"/>
+                                <label for="mobile">Mobile Number</label>
+                                <input id="mobile" placeholder="Mobile" class="form-control" type="text"/>
                             </div>
                             <div class="col-md-4 p-2">
-                                <label>Password</label>
+                                <label for="password">Password</label>
                                 <input id="password" placeholder="User Password" class="form-control" type="password"/>
                             </div>
                         </div>
@@ -44,13 +44,15 @@
     getProfile();
     async function getProfile(){
         showLoader();
-        let res=await axios.get("/user-profile")
+        let res=await axios.get("/user-profile-details")
         hideLoader();
-        if(res.status===200 && res.data['status']==='success'){
+        if(res.status===200 && res.data['status']==='Successful'){
+
             let data=res.data['data'];
+
             document.getElementById('email').value=data['email'];
-            document.getElementById('firstName').value=data['firstName'];
-            document.getElementById('lastName').value=data['lastName'];
+            document.getElementById('firstName').value=data['first_name'];
+            document.getElementById('lastName').value=data['last_name'];
             document.getElementById('mobile').value=data['mobile'];
             document.getElementById('password').value=data['password'];
         }
@@ -61,7 +63,6 @@
     }
 
     async function onUpdate() {
-
 
         let firstName = document.getElementById('firstName').value;
         let lastName = document.getElementById('lastName').value;
@@ -82,14 +83,14 @@
         }
         else{
             showLoader();
-            let res=await axios.post("/user-update",{
-                firstName:firstName,
-                lastName:lastName,
+            let res=await axios.post("/user-profile-update",{
+                first_name:firstName,
+                last_name:lastName,
                 mobile:mobile,
                 password:password
             })
             hideLoader();
-            if(res.status===200 && res.data['status']==='success'){
+            if(res.status===200 && res.data['status']==='Successful'){
                 successToast(res.data['message']);
                 await getProfile();
             }

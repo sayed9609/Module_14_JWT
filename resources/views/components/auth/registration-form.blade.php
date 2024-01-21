@@ -21,7 +21,7 @@
                             </div>
                             <div class="col-md-4 p-2">
                                 <label for="mobile">Mobile Number</label>
-                                <input id="mobile" placeholder="Mobile" class="form-control" type="number"/>
+                                <input id="mobile" placeholder="Mobile" class="form-control" type="text"/>
                             </div>
                             <div class="col-md-4 p-2">
                                 <label for="password">Password</label>

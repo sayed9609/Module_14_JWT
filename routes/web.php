@@ -14,6 +14,9 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+
+
+// -------------------Back End ----------------------//
 // Landing Page
 
 Route::get('/', function (){
@@ -31,16 +34,29 @@ Route::post('/user-verify-otp', [UserController::class, 'VerifyOTP']);
 
 Route::post('/user-reset-password', [UserController::class, 'ResetPass'])->middleware([TokenVerificationMiddleware::class]);
 
-//------------------------------------------------------------------------//
+// Logout Route
+
+Route::get('/user-logout', [UserController::class, 'Logout']);
+
+// Profile
+
+Route::get('/user-profile-details', [UserController::class, 'User_Profile'])->middleware([TokenVerificationMiddleware::class]);
+Route::post('/user-profile-update', [UserController::class, 'User_Profile_Update'])->middleware([TokenVerificationMiddleware::class]);
+
+
+//-------------------------Front End-----------------------------//
 
 // Page Routes
 
-Route::get('/user-registration', [UserController::class, 'Registration']);
-Route::get('/user-login', [UserController::class,  'Login']);
-Route::get('/user-send-otp', [UserController::class, 'Send_OTP']);
-Route::get('/user-verify-otp', [UserController::class, 'Verify_OTP']);
-Route::get('/user-reset-password', [UserController::class, 'Reset_Password']);
-Route::get('/user-dashboard', [UserController::class, 'Dashboard']);
+Route::get('/user-registration', [UserController::class, 'Registration_Page']);
+Route::get('/user-login', [UserController::class,  'Login_Page']);
+Route::get('/user-send-otp', [UserController::class, 'Send_OTP_Page']);
+Route::get('/user-verify-otp', [UserController::class, 'Verify_OTP_Page']);
+Route::get('/user-reset-password', [UserController::class, 'Reset_Password_Page'])->middleware([TokenVerificationMiddleware::class]);
+Route::get('/user-dashboard', [UserController::class, 'Dashboard_Page'])->middleware([TokenVerificationMiddleware::class]);
+Route::get('/user-profile', [UserController::class, 'Profile_Page'])->middleware ([TokenVerificationMiddleware::class]);
+
+
 
 
 

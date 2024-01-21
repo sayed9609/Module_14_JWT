@@ -6,6 +6,7 @@ use App\Helper\JWTToken;
 use App\Mail\OTPMail;
 use App\Models\User;
 use Exception;
+use http\Env\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 
@@ -50,12 +51,12 @@ class UserController extends Controller
             'password' => 'required|string|min:8'
         ]);
 
-        $count = User::where('email', '=', $request->input('email'))
+        $data = User::where('email', '=', $request->input('email'))
             ->where('password', '=', $request->input('password'))
-            ->count();
+            ->select('id')->first();
 
-        if ($count == 1) {
-            $token = JWTToken::CreateToken($request->input('email'));
+        if ($data !== null) {
+            $token = JWTToken::CreateToken($request->input('email'), $data->id);
             return response()->json([
                 'status' => 'Successful',
                 'message' => 'User Login Successfully',
@@ -147,35 +148,88 @@ class UserController extends Controller
         }
     }
 
+    function Logout()
+    {
+        return redirect('user-login')->cookie('token', '', -1);
+    }
 
-    function Login()
+    function User_Profile(Request $request)
+    {
+        $email = $request->header('email');
+        $data = User::where('email', '=', $email)->first();
+        return response()->json([
+            'status' => 'Successful',
+            'message' => 'Request Successful',
+            'data' => $data
+        ]);
+    }
+
+    function User_Profile_Update(Request $request)
+    {
+        try
+        {
+            $email = $request->header('email');
+            $first_name = $request->input('first_name');
+            $last_name = $request->input('last_name');
+            $mobile = $request->input('mobile');
+            $password = $request->input('password');
+
+            User::where('email', '=', $email)->update([
+                'first_name' => $first_name,
+                'last_name' => $last_name,
+                'mobile' => $mobile,
+                'password' => $password
+            ]);
+            return response()->json([
+               'status' => 'Successful',
+               'message' => 'Successfully Updated'
+            ]);
+        }
+        catch (Exception)
+        {
+            return response([
+                'status' => 'Failed',
+                'message' => 'Update Failed'
+            ]);
+        }
+
+    }
+
+
+    function Login_Page()
     {
         return view('pages.auth.login-page');
     }
 
-    function Dashboard()
+    function Dashboard_Page()
     {
         return view('pages.dashboard.dashboard-page');
     }
 
-    function Registration()
+    function Registration_Page()
     {
         return view('pages.auth.registration-page');
     }
 
-    function Send_OTP()
+    function Send_OTP_Page()
     {
         return view('pages.auth.send-otp-page');
     }
 
-    function Verify_OTP()
+    function Verify_OTP_Page()
     {
         return view('pages.auth.verify-otp-page');
     }
 
-    function Reset_Password()
+    function Reset_Password_Page()
     {
         return view('pages.auth.reset-pass-page');
     }
+
+    function Profile_Page()
+    {
+        return view('pages.dashboard.profile-page');
+    }
+
 
 }
